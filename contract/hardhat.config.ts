@@ -17,9 +17,12 @@ export default <HardhatUserConfig> {
   },
   networks: {
     ethereum: {
-      url: 'https://cloudflare-eth.com',
+      url: `https://mainnet.infura.io/v3/${process.env.INFURA}`,
       chainId: 1,
       accounts,
     }
   },
+  etherscan: {
+    apiKey: process.env.ETHERSCAN,
+  }
 };
