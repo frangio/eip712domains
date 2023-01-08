@@ -43,7 +43,6 @@ export async function getEIP712Domain(address: string, provider: ethers.provider
       provider.getNetwork(),
     ]);
 
-    // non-standard getter
     const domainSeparator = domainSeparator1 ?? domainSeparator2;
 
     if (domainSeparator) {
