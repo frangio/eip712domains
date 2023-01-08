@@ -72,13 +72,17 @@ function buildDomain(
   fieldsString: string,
   name: string,
   version: string,
-  chainId: BigNumber,
+  chainId: BigNumber | number,
   verifyingContract: string,
   salt: string,
   extensions: unknown[],
 ): EIP712Domain {
   if (extensions.length > 0) {
     throw Error("extensions not implemented");
+  }
+
+  if (ethers.BigNumber.isBigNumber(chainId)) {
+    chainId = chainId.toNumber();
   }
 
   const fields = Number(fieldsString);
