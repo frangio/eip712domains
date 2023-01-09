@@ -3,7 +3,9 @@
   import { getEIP712Domain, type EIP712Domain } from '$lib/eip-5267';
   import { isEthereum } from '$lib/is-ethereum';
 
-  let rpc = 'https://cloudflare-eth.com';
+  const cloudflare = 'https://cloudflare-eth.com';
+
+  let rpc = cloudflare;
 
   const examples = {
     demo: '0x5cEE26B7b9C1057b5e7272a37e53884385437A96',
@@ -31,7 +33,14 @@
 
   <p class="flex flex-col gap-2">
   <label class="contents">
-    <span>JSON-RPC Provider</span>
+    <span class="flex items-center">
+      <span class="flex-1">JSON-RPC Provider</span>
+      <button class:invisible={rpc === cloudflare} on:click={() => rpc = cloudflare}>
+        <svg class="w-4 h-4" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M12.5,8C9.85,8 7.45,9 5.6,10.6L2,7V16H11L7.38,12.38C8.77,11.22 10.54,10.5 12.5,10.5C16.04,10.5 19.05,12.81 20.1,16L22.47,15.22C21.08,11.03 17.15,8 12.5,8Z" />
+        </svg>
+      </button>
+    </span>
     <input type="text" bind:value={rpc} class="border border-current px-2 py-1 w-full">
   </label>
   </p>
