@@ -50,7 +50,7 @@
 <title>EIP-5267 Demo</title>
 </svelte:head>
 
-<div class="m-2 space-y-4 max-w-md overflow-auto">
+<div class="m-2 space-y-4 max-w-md">
   <h1 class="font-bold text-xl">
     <a href="https://eips.ethereum.org/EIPS/eip-5267">
       EIP-5267: Retrieval of EIP-712 domain
