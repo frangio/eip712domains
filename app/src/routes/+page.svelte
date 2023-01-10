@@ -119,7 +119,7 @@
   {/each}
   </p>
 
-  <div class="min-h-[10rem]">
+  <div class="min-h-[15rem]">
   {#await domain}
     <p>Loading...</p>
   {:then domain}
