@@ -1,12 +1,15 @@
 import { ethers } from "ethers";
 import type { BigNumber } from "ethers";
 
+export const eip5267 = Symbol('EIP-5267');
+
 export interface EIP712Domain {
-  name?: string,
-  version?: string,
-  chainId?: number | BigNumber,
-  verifyingContract?: string,
-  salt?: string,
+  name?: string;
+  version?: string;
+  chainId?: number | BigNumber;
+  verifyingContract?: string;
+  salt?: string;
+  [eip5267]?: boolean;
 }
 
 const iface = new ethers.utils.Interface([
@@ -26,12 +29,17 @@ const iface = new ethers.utils.Interface([
   `function DOMAIN_TYPEHASH() view returns (bytes32)`,
 ]);
 
-export async function getEIP712Domain(address: string, provider: ethers.providers.Provider) {
+export async function getEIP712Domain(address: string, provider: ethers.providers.Provider): Promise<EIP712Domain> {
   const contract = new ethers.Contract(address, iface, provider);
   try {
     const domainDescriptor: Parameters<typeof buildDomain> = await contract.eip712Domain();
-    return buildDomain(...domainDescriptor);
-  } catch (e) {
+    return Object.assign(
+      buildDomain(...domainDescriptor),
+      { [eip5267]: true }
+    );
+  } catch (e: any) {
+    if (e.code !== 'CALL_EXCEPTION') throw e;
+
     const verifyingContract = contract.address;
 
     const [domainSeparator1, domainSeparator2, domainTypehash, name, version, { chainId }] = await Promise.all([
@@ -60,7 +68,7 @@ export async function getEIP712Domain(address: string, provider: ethers.provider
         return { name, chainId, verifyingContract };
     }
 
-    throw new Error(`Can't obtain EIP712 domain`);
+    throw new Error(`Not EIP-5267 and could not reconstruct EIP-712 domain.`);
   }
 }
 
@@ -85,7 +93,7 @@ function buildDomain(
   }
 
   const fields = Number(fieldsString);
-  const domain = { name, version, chainId, verifyingContract, salt };
+  const domain: EIP712Domain = { name, version, chainId, verifyingContract, salt };
 
   for (const [i, field] of fieldNames.entries()) {
     if (!(fields & (1 << i))) {

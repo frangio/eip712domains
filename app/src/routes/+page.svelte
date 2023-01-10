@@ -1,6 +1,6 @@
 <script lang="ts">
   import { ethers } from 'ethers';
-  import { getEIP712Domain, type EIP712Domain } from '$lib/eip-5267';
+  import { eip5267, getEIP712Domain, type EIP712Domain } from '$lib/eip-5267';
   import { isEthereum } from '$lib/is-ethereum';
 
   const cloudflare = 'https://cloudflare-eth.com';
@@ -9,7 +9,7 @@
 
   const examples = {
     demo: {
-      name: 'EIP-5267 Demo',
+      name: 'EIP-5267',
       address: '0x5cEE26B7b9C1057b5e7272a37e53884385437A96',
     },
     ens: {
@@ -25,11 +25,11 @@
       address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
     },
     safe: {
-      name: 'Gnosis Safe',
+      name: 'Safe',
       address: '0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552',
     },
     wyvern: {
-      name: 'OpenSea Wyvern',
+      name: 'Wyvern',
       address: '0x7f268357A8c2552623316e2562D90e642bB538E5',
     },
   };
@@ -46,8 +46,33 @@
     JSON.stringify(d, (k, v) => v.type === 'BigNumber' ? v.hex : v, 2);
 </script>
 
-<div class="m-2 space-y-4 max-w-md">
-  <h1 class="font-bold text-xl">EIP-5267 Demo</h1>
+<svelte:head>
+<title>EIP-5267 Demo</title>
+</svelte:head>
+
+<div class="m-2 space-y-4 max-w-md overflow-auto">
+  <h1 class="font-bold text-xl">
+    <a href="https://eips.ethereum.org/EIPS/eip-5267">
+      EIP-5267: Retrieval of EIP-712 domain
+    </a>
+  </h1>
+
+  <p>
+  <strong>Abstract:</strong>
+  This EIP complements EIP-712 by standardizing how contracts should publish the fields and values that describe their domain. This enables applications to retrieve this description and generate appropriate domain separators in a general way, and thus integrate EIP-712 signatures securely and scalably.
+  <a href="https://eips.ethereum.org/EIPS/eip-5267">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="inline w-4 h-4">
+      <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 00-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 00.75-.75v-4a.75.75 0 011.5 0v4A2.25 2.25 0 0112.75 17h-8.5A2.25 2.25 0 012 14.75v-8.5A2.25 2.25 0 014.25 4h5a.75.75 0 010 1.5h-5z" clip-rule="evenodd" />
+      <path fill-rule="evenodd" d="M6.194 12.753a.75.75 0 001.06.053L16.5 4.44v2.81a.75.75 0 001.5 0v-4.5a.75.75 0 00-.75-.75h-4.5a.75.75 0 000 1.5h2.553l-9.056 8.194a.75.75 0 00-.053 1.06z" clip-rule="evenodd" />
+    </svg>
+  </a>
+  </p>
+
+  <hr/>
+
+  <h1 class="font-bold text-xl">
+    Demo
+  </h1>
 
   <p class="flex flex-col gap-2">
   <label class="contents">
@@ -94,13 +119,18 @@
   {/each}
   </p>
 
-  <p>
   {#await domain}
-    Loading...
+    <p>Loading...</p>
   {:then domain}
-    <pre>{stringifyDomain(domain)}</pre>
+    <p>
+    {#if domain[eip5267]}
+      Retrieved domain with EIP-5267:
+    {:else}
+      Recovered domain by reconstruction without EIP-5267:
+    {/if}
+    </p>
+    <pre class="overflow-auto">{stringifyDomain(domain)}</pre>
   {:catch error}
-    {error.message}
+    <p>Error: {error.reason || error.message}</p>
   {/await}
-  </p>
 </div>
