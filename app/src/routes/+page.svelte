@@ -119,6 +119,7 @@
   {/each}
   </p>
 
+  <div class="min-h-[10rem]">
   {#await domain}
     <p>Loading...</p>
   {:then domain}
@@ -133,4 +134,5 @@
   {:catch error}
     <p>Error: {error.reason || error.message}</p>
   {/await}
+  </div>
 </div>
