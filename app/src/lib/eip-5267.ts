@@ -114,6 +114,11 @@ function* guessDomains({ name, version, verifyingContract, chainId }: EIP712Doma
       }
     }
   }
+
   yield { chainId, verifyingContract };
   yield { verifyingContract };
+
+  if (verifyingContract?.toLowerCase() === '0x000000000022d473030f116ddee9f6b43ac78ba3') {
+    yield { name: 'Permit2', chainId, verifyingContract };
+  }
 }
