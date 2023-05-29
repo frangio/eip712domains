@@ -1,0 +1,20 @@
+{
+  "name": "eip5267",
+  "version": "0.1.0",
+  "description": "Utilities for retrieval of EIP-712 domain via EIP-5267 with fallback.",
+  "author": "Francisco Giordano <fg@frang.io>",
+  "license": "MIT",
+  "exports": {
+    "./*.js": "./dist/*.js",
+    "./*.ts": "./src/*.ts"
+  },
+  "scripts": {
+    "prepare": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "viem": "^0.3.37"
+  }
+}

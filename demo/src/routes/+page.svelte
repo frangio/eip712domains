@@ -1,7 +1,11 @@
 <script lang="ts">
-  import { ethers } from 'ethers';
-  import { eip5267, getEIP712Domain, type EIP712Domain } from '$lib/eip-5267';
-  import { isEthereum } from '$lib/is-ethereum';
+  import { onMount } from 'svelte';
+  import { browser } from '$app/environment';
+  import { eip5267, createEIP712Client, type EIP712Domain, type EIP712Client } from '$lib/eip5267/generic.ts';
+  import { createPublicClient, http, type PublicClient } from 'viem';
+  import { mainnet } from 'viem/chains';
+  import { awaitStore } from '$lib/await-store.ts';
+  import { readable } from 'svelte/store';
 
   const cloudflare = 'https://cloudflare-eth.com';
 
@@ -32,18 +36,38 @@
       name: 'Wyvern',
       address: '0x7f268357A8c2552623316e2562D90e642bB538E5',
     },
+    permit2: {
+      name: 'Permit2',
+      address: '0x000000000022D473030F116dDEE9F6B43aC78BA3',
+    },
   };
 
   let address = examples.demo.address;
 
-  $: provider = new ethers.providers.JsonRpcProvider(rpc);
+  let publicClient: PublicClient | undefined, eip712Client: EIP712Client | undefined;
 
-  $: eth = isEthereum(provider);
+  $: if (browser) {
+    publicClient = createPublicClient({
+      batch: { multicall: true },
+      transport: http(rpc),
+    });
+    eip712Client = createEIP712Client(publicClient);
+  }
 
-  $: domain = getEIP712Domain(address, provider);
+  let eth = readable<boolean | undefined>(undefined);
+  let domain: Promise<EIP712Domain> = new Promise(() => undefined);
+
+  $: if (publicClient && eip712Client) {
+    eth = awaitStore(undefined, async () => {
+      const id = await publicClient!.getChainId();
+      return id === mainnet.id;
+    });
+
+    domain = eip712Client.getDomain(address);
+  }
 
   const stringifyDomain = (d: EIP712Domain) =>
-    JSON.stringify(d, (k, v) => v.type === 'BigNumber' ? v.hex : v, 2);
+    JSON.stringify(d, (k, v) => typeof v === 'bigint' ? '0x' + v.toString(16) : v, 2);
 </script>
 
 <svelte:head>
