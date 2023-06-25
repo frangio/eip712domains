@@ -17,7 +17,7 @@
     </h1>
 
     <div class="space-x-2 [&>a:hover]:underline">
-      <a href="/about">About</a>
+      <a href="/about" data-sveltekit-preload-data>About</a>
       <a href="https://github.com/frangio/eip712domains">Source</a>
     </div>
   </div>
