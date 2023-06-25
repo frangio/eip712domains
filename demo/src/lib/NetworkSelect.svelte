@@ -61,7 +61,7 @@
       <button class="px-2" on:click={() => network = selectedChain}><XIcon size="1em" /></button>
     </div>
   {:else}
-    <select bind:value={network} class="py-1 block ml-auto border-transparent text-right text-[length:inherit] focus:ring-0" on:change={handleChange}>
+    <select bind:value={network} class="py-1 block ml-auto border-transparent text-last-right text-[length:inherit] focus:ring-0" on:change={handleChange}>
       {#each shownChains as g}
         <optgroup label={g.group}>
           {#each g.chains as c}
