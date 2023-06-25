@@ -33,11 +33,11 @@
 </script>
 
 <div class="w-full border rounded">
-  <table class="w-full table-auto border-collapse">
+  <table class="w-full table-fixed border-collapse">
     {#each getFields(domain) as field}
       <tr class="divide-x border-b">
-        <td class="px-2 py-1">{displayFieldName(field)}</td>
-        <td class="px-2 py-1">{domain[field]}</td>
+        <td class="px-2 py-1 w-[10ex]">{displayFieldName(field)}</td>
+        <td class="px-2 py-1 overflow-hidden text-ellipsis">{domain[field]}</td>
       </tr>
     {/each}
   </table>
@@ -50,13 +50,15 @@
       </div>
     {/if}
     <button class="p-2 ml-auto flex gap-2 items-center" on:click={handleCopy}>
+      <span class="flex-none">
       {#if copied === domain}
-        <div in:fade>
+        <span in:fade>
           <CheckIcon size="1em" />
-        </div>
+        </span>
       {:else}
         <CopyIcon size="1em" />
       {/if}
+      </span>
       <span>Copy JSON</span>
     </button>
   </div>
