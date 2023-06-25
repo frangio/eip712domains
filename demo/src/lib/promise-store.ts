@@ -23,7 +23,7 @@ export function promiseStore<T>(initial: T): PromiseStore<T> {
     const tock = ++tick;
     const [result] = await Promise.allSettled([promise]);
     if (tick === tock) {
-      if (result.status === 'fulfilled') {
+      if (result.status === "fulfilled") {
         inner.last = result.value;
         inner.error = undefined;
       } else {
