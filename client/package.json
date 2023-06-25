@@ -5,6 +5,10 @@
   "author": "Francisco Giordano <fg@frang.io>",
   "license": "MIT",
   "type": "commonjs",
+  "files": [
+    "src",
+    "dist"
+  ],
   "exports": {
     "./*": {
       "typescript": "./src/*.ts",
