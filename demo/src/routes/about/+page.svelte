@@ -13,6 +13,6 @@
   </p>
 
   <div>
-    <img src={"/picture1.png"} class="block w-2/3 m-auto my-20" alt="">
+    <img src={"/picture1.webp"} class="block w-2/3 m-auto my-20" alt="">
   </div>
 </div>
