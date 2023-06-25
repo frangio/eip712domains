@@ -1,13 +1,10 @@
-export * from './generic';
+export * from './common';
 
-import * as generic from './generic';
+import * as core from './viem';
+import { http, createPublicClient } from 'viem';
 
-import { createPublicClient, http } from 'viem';
-
-export function createEIP712Client(url: string) {
-  const publicClient = createPublicClient({
-    batch: { multicall: true },
-    transport: http(url),
-  });
-  return generic.createEIP712Client(publicClient);
+export function createERC5267Client(url: string) {
+  const transport = http(url);
+  const publicClient = createPublicClient({ transport });
+  return core.createERC5267Client(publicClient);
 }

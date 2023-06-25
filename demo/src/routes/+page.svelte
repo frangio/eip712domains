@@ -1,167 +1,127 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { browser } from '$app/environment';
-  import { eip5267, createEIP712Client, type EIP712Domain, type EIP712Client } from '$lib/eip5267/generic.ts';
-  import { createPublicClient, http, type PublicClient } from 'viem';
-  import { mainnet } from 'viem/chains';
-  import { awaitStore } from '$lib/await-store.ts';
-  import { readable } from 'svelte/store';
+  import { onMount } from "svelte";
+  import { fade } from "svelte/transition";
+  import { browser } from "$app/environment";
+  import { assets } from "$app/paths";
+  import { page } from "$app/stores";
+  import { erc5267, createERC5267Client, type EIP712Domain, type EIP712DomainWithMarker, type ERC5267Client } from "eip712domains/viem";
+  import { type PublicClient, isAddress } from "viem";
+  import type { Chain } from "viem/chains";
+  import { promiseStore, type PromiseStore } from "$lib/promise-store.ts";
+  import GlobeIcon from "$lib/octicons/Globe.svelte";
+  import AlertIcon from "$lib/octicons/Alert.svelte";
+  import NetworkSelect, { type NetworkName } from "$lib/NetworkSelect.svelte";
+  import Loading from "$lib/Loading.svelte";
+  import EIP712DomainTable from "$lib/EIP712DomainTable.svelte";
 
-  const cloudflare = 'https://cloudflare-eth.com';
+  const initialRpc = $page.url.searchParams.get("rpc") ?? undefined;
 
-  let rpc = cloudflare;
+  let network: NetworkName;
+  let chain: Chain;
 
   const examples = {
     demo: {
-      name: 'EIP-5267',
-      address: '0x5cEE26B7b9C1057b5e7272a37e53884385437A96',
+      name: "ERC-5267",
+      address: "0x5cEE26B7b9C1057b5e7272a37e53884385437A96",
     },
     ens: {
-      name: 'ENS',
-      address: '0xC18360217D8F7Ab5e7c516566761Ea12Ce7F9D72',
+      name: "ENS",
+      address: "0xC18360217D8F7Ab5e7c516566761Ea12Ce7F9D72",
     },
     usdc: {
-      name: 'USDC',
-      address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+      name: "USDC",
+      address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     },
     uni: {
-      name: 'UNI',
-      address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
+      name: "UNI",
+      address: "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
     },
     safe: {
-      name: 'Safe',
-      address: '0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552',
+      name: "Safe",
+      address: "0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552",
     },
     wyvern: {
-      name: 'Wyvern',
-      address: '0x7f268357A8c2552623316e2562D90e642bB538E5',
+      name: "Wyvern",
+      address: "0x7f268357A8c2552623316e2562D90e642bB538E5",
     },
     permit2: {
-      name: 'Permit2',
-      address: '0x000000000022D473030F116dDEE9F6B43aC78BA3',
+      name: "Permit2",
+      address: "0x000000000022D473030F116dDEE9F6B43aC78BA3",
     },
   };
 
   let address = examples.demo.address;
 
-  let publicClient: PublicClient | undefined, eip712Client: EIP712Client | undefined;
+  let publicClient: PublicClient | undefined, erc5267Client: ERC5267Client | undefined;
 
-  $: if (browser) {
-    publicClient = createPublicClient({
-      batch: { multicall: true },
-      transport: http(rpc),
-    });
-    eip712Client = createEIP712Client(publicClient);
+  $: if (publicClient) {
+    erc5267Client = createERC5267Client(publicClient);
   }
 
-  let eth = readable<boolean | undefined>(undefined);
-  let domain: Promise<EIP712Domain> = new Promise(() => undefined);
+  const domain: PromiseStore<EIP712DomainWithMarker> = promiseStore({
+    name: "EIP5267Demo",
+    version: "1",
+    chainId: 1n,
+    verifyingContract: "0x5cEE26B7b9C1057b5e7272a37e53884385437A96",
+    [erc5267]: true,
+  });
 
-  $: if (publicClient && eip712Client) {
-    eth = awaitStore(undefined, async () => {
-      const id = await publicClient!.getChainId();
-      return id === mainnet.id;
-    });
-
-    domain = eip712Client.getDomain(address);
+  $: if (erc5267Client) {
+    if (isAddress(address)) {
+      domain.load(
+        erc5267Client.getEIP712Domain(address).then(async d => {
+          if (d === undefined) {
+            throw { message: "Could not retrieve domain." }
+          } else {
+            return d;
+          }
+        })
+      );
+    }
   }
-
-  const stringifyDomain = (d: EIP712Domain) =>
-    JSON.stringify(d, (k, v) => typeof v === 'bigint' ? '0x' + v.toString(16) : v, 2);
 </script>
 
-<svelte:head>
-<title>EIP-5267 Demo</title>
-</svelte:head>
+<div class="flex flex-col gap-2">
+  <input type="text" class="ring-red-100" class:ring={address && !isAddress(address)} bind:value={address} on:focus={e => e.currentTarget.select()}>
 
-<div class="m-2 space-y-4 max-w-md">
-  <h1 class="font-bold text-xl">
-    <a href="https://eips.ethereum.org/EIPS/eip-5267">
-      EIP-5267: Retrieval of EIP-712 domain
-    </a>
-  </h1>
-
-  <p>
-  <strong>Abstract:</strong>
-  This EIP complements EIP-712 by standardizing how contracts should publish the fields and values that describe their domain. This enables applications to retrieve this description and generate appropriate domain separators in a general way, and thus integrate EIP-712 signatures securely and scalably.
-  <a href="https://eips.ethereum.org/EIPS/eip-5267">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="inline w-4 h-4">
-      <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 00-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 00.75-.75v-4a.75.75 0 011.5 0v4A2.25 2.25 0 0112.75 17h-8.5A2.25 2.25 0 012 14.75v-8.5A2.25 2.25 0 014.25 4h5a.75.75 0 010 1.5h-5z" clip-rule="evenodd" />
-      <path fill-rule="evenodd" d="M6.194 12.753a.75.75 0 001.06.053L16.5 4.44v2.81a.75.75 0 001.5 0v-4.5a.75.75 0 00-.75-.75h-4.5a.75.75 0 000 1.5h2.553l-9.056 8.194a.75.75 0 00-.053 1.06z" clip-rule="evenodd" />
-    </svg>
-  </a>
-  </p>
-
-  <hr/>
-
-  <h1 class="font-bold text-xl flex items-center justify-between">
-    Demo
-    <a href="https://github.com/frangio/eip-5267">
-      <svg class="inline" width="1rem" height="1rem" viewBox="0 0 98 96" xmlns="http://www.w3.org/2000/svg">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M48.854 0C21.839 0 0 22 0 49.217c0 21.756 13.993 40.172 33.405 46.69 2.427.49 3.316-1.059 3.316-2.362 0-1.141-.08-5.052-.08-9.127-13.59 2.934-16.42-5.867-16.42-5.867-2.184-5.704-5.42-7.17-5.42-7.17-4.448-3.015.324-3.015.324-3.015 4.934.326 7.523 5.052 7.523 5.052 4.367 7.496 11.404 5.378 14.235 4.074.404-3.178 1.699-5.378 3.074-6.6-10.839-1.141-22.243-5.378-22.243-24.283 0-5.378 1.94-9.778 5.014-13.2-.485-1.222-2.184-6.275.486-13.038 0 0 4.125-1.304 13.426 5.052a46.97 46.97 0 0 1 12.214-1.63c4.125 0 8.33.571 12.213 1.63 9.302-6.356 13.427-5.052 13.427-5.052 2.67 6.763.97 11.816.485 13.038 3.155 3.422 5.015 7.822 5.015 13.2 0 18.905-11.404 23.06-22.324 24.283 1.78 1.548 3.316 4.481 3.316 9.126 0 6.6-.08 11.897-.08 13.526 0 1.304.89 2.853 3.316 2.364 19.412-6.52 33.405-24.935 33.405-46.691C97.707 22 75.788 0 48.854 0z" fill="#24292f"/>
-      </svg>
-    </a>
-  </h1>
-
-  <p class="flex flex-col gap-2">
-  <label class="contents">
-    <span class="flex items-center">
-      <span class="flex-1">JSON-RPC Provider</span>
-      <button class:invisible={rpc === cloudflare} on:click={() => rpc = cloudflare}>
-        <svg class="w-4 h-4" viewBox="0 0 24 24">
-          <path fill="currentColor" d="M12.5,8C9.85,8 7.45,9 5.6,10.6L2,7V16H11L7.38,12.38C8.77,11.22 10.54,10.5 12.5,10.5C16.04,10.5 19.05,12.81 20.1,16L22.47,15.22C21.08,11.03 17.15,8 12.5,8Z" />
-        </svg>
-      </button>
-    </span>
-    <input type="text" bind:value={rpc} class="border border-current px-2 py-1 w-full">
-  </label>
-  </p>
-
-  <p class="flex flex-col gap-2">
-  <label class="contents">
-    <span class="flex items-center justify-between">
-      <span class="flex-1">
-        Contract Address
-      </span>
-
-      <a class:invisible={!$eth} href="https://etherscan.io/address/{address}" target="_blank" rel="noreferrer">
-        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 293.775 293.671">
-          <g id="etherscan-logo-circle" transform="translate(-219.378 -213.33)">
-          <path id="Path_1" data-name="Path 1" d="M280.433,353.152A12.45,12.45,0,0,1,292.941,340.7l20.737.068a12.467,12.467,0,0,1,12.467,12.467v78.414c2.336-.692,5.332-1.43,8.614-2.2a10.389,10.389,0,0,0,8.009-10.11V322.073a12.469,12.469,0,0,1,12.468-12.47h20.778a12.469,12.469,0,0,1,12.467,12.467v90.279s5.2-2.106,10.269-4.245a10.408,10.408,0,0,0,6.353-9.577V290.9a12.466,12.466,0,0,1,12.466-12.467h20.778A12.468,12.468,0,0,1,450.815,290.9v88.625c18.014-13.055,36.271-28.758,50.759-47.639a20.926,20.926,0,0,0,3.185-19.537,146.6,146.6,0,0,0-136.644-99.006c-81.439-1.094-148.744,65.385-148.736,146.834a146.371,146.371,0,0,0,19.5,73.45,18.56,18.56,0,0,0,17.707,9.173c3.931-.346,8.825-.835,14.643-1.518a10.383,10.383,0,0,0,9.209-10.306V353.152" fill="#21325b"/>
-          <path id="Path_2" data-name="Path 2" d="M244.417,398.641A146.808,146.808,0,0,0,477.589,279.9c0-3.381-.157-6.724-.383-10.049-53.642,80-152.686,117.4-232.79,128.793" transform="translate(35.564 80.269)" fill="#979695"/>
-          </g>
-        </svg>
+  <div class="flex gap-1 items-center justify-between text-sm">
+    {#if chain?.blockExplorers?.default}
+      <a class="px-2" href="{chain.blockExplorers.default.url}/address/{address}" target="_blank" rel="noreferrer">
+        <GlobeIcon width="1em" height="1em" />
       </a>
-    </span>
+    {/if}
+    <NetworkSelect {initialRpc} bind:network bind:chain bind:publicClient />
+  </div>
+</div>
 
-    <input type="text" bind:value={address} class="border border-current px-2 py-1 w-full">
-  </label>
-  </p>
+<div class="flex flex-col min-h-[20rem] justify-between">
+  <div class="relative">
+    {#if $domain.loading}
+      <div class="absolute inset-0" transition:fade>
+        <div class="absolute inset-0 flex items-end justify-center bg-sliding">
+          <span class="p-2 text-sm">
+            <Loading />
+          </span>
+        </div>
+      </div>
+    {/if}
+    {#if $domain.error}
+      <div class="px-2 py-1 flex items-center gap-2 rounded border bg-amber-50 border-amber-200">
+        <span class="inline-block fill-amber-400"><AlertIcon /></span>
+        {$domain.error.shortMessage || $domain.error.message}
+      </div>
+    {:else}
+      <EIP712DomainTable domain={$domain.last} />
+    {/if}
+  </div>
 
   <p class="flex flex-wrap gap-x-2">
   <span>Examples:</span>
   {#each Object.values(examples) as e}
     <label class="block hover:cursor-pointer">
-      <input class="hidden peer" type="radio" bind:group={address} value={e.address}>
+      <input class="hidden peer" type="radio" bind:group={address} value={e.address} on:change={() => network = "mainnet"}>
       <span class="peer-checked:underline">{e.name}</span>
     </label>
   {/each}
   </p>
-
-  <div class="min-h-[15rem]">
-  {#await domain}
-    <p>Loading...</p>
-  {:then domain}
-    <p>
-    {#if domain[eip5267]}
-      Retrieved domain with EIP-5267:
-    {:else}
-      Recovered domain by reconstruction without EIP-5267:
-    {/if}
-    </p>
-    <pre class="overflow-auto">{stringifyDomain(domain)}</pre>
-  {:catch error}
-    <p>Error: {error.reason || error.message}</p>
-  {/await}
-  </div>
 </div>

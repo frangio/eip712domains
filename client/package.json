@@ -1,12 +1,15 @@
 {
-  "name": "eip5267",
+  "name": "eip712domains",
   "version": "0.1.0",
-  "description": "Utilities for retrieval of EIP-712 domain via EIP-5267 with fallback.",
+  "description": "Utilities for retrieval of EIP-712 domain via ERC-5267 with fallback logic.",
   "author": "Francisco Giordano <fg@frang.io>",
   "license": "MIT",
+  "type": "commonjs",
   "exports": {
-    "./*.js": "./dist/*.js",
-    "./*.ts": "./src/*.ts"
+    "./*": {
+      "typescript": "./src/*.ts",
+      "default": "./dist/*.js"
+    }
   },
   "scripts": {
     "prepare": "tsc"
@@ -15,6 +18,6 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "viem": "^0.3.37"
+    "viem": "^1.0.7"
   }
 }

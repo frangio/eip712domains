@@ -1,4 +1,32 @@
-/* Write your global styles here, in PostCSS syntax */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  input[type="text"],
+  select {
+    @apply rounded border-gray-200;
+  }
+}
+
+@layer components {
+  @keyframes bg-slide {
+    0% {
+      background-position: 0px;
+    }
+
+    100% {
+      background-position: 600px;
+    }
+  }
+
+  .bg-sliding {
+    @apply bg-gradient-to-r from-slate-50/40 via-slate-200/40 to-slate-50/40;
+    background-size: 600px;
+    animation: bg-slide 1s infinite linear;
+  }
+
+  .loading {
+    @apply animate-pulse blur-sm;
+  }
+}
