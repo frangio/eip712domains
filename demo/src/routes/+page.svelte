@@ -97,10 +97,12 @@
 <div class="flex flex-col min-h-[20rem] justify-between">
   <div class="relative">
     {#if $domain.loading}
-      <div class="absolute inset-0 flex items-end justify-center bg-slider" transition:fade>
-        <span class="p-2 text-sm">
-          <Loading />
-        </span>
+      <div class="absolute inset-0" transition:fade>
+        <div class="absolute inset-0 flex items-end justify-center bg-sliding">
+          <span class="p-2 text-sm">
+            <Loading />
+          </span>
+        </div>
       </div>
     {/if}
     {#if $domain.error}
