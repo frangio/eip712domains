@@ -10,24 +10,8 @@
 }
 
 @layer components {
-  @keyframes bg-slide {
-    0% {
-      background-position: 0px;
-    }
-
-    100% {
-      background-position: 600px;
-    }
-  }
-
-  .bg-sliding {
-    @apply bg-gradient-to-r from-slate-50/40 via-slate-200/40 to-slate-50/40;
-    background-size: 600px;
-    animation: bg-slide 1s infinite linear;
-  }
-
-  .loading {
-    @apply animate-pulse blur-sm;
+  .bg-slider {
+    background-image: url("data:image/svg+xml,%3Csvg width='300' height='300' xmlns='http://www.w3.org/2000/svg' %3E%3Cdefs%3E%3ClinearGradient id='gradient' spreadMethod='repeat'%3E%3Cstop offset='0%25' stop-color='rgb(248, 250, 252)' stop-opacity='0.4' /%3E%3Cstop offset='50%25' stop-color='rgb(226, 232, 240)' stop-opacity='0.4' /%3E%3Cstop offset='100%25' stop-color='rgb(248, 250, 252)' stop-opacity='0.4' /%3E%3Canimate attributeName='x1' values='0%25;200%25' dur='3s' repeatCount='indefinite' /%3E%3Canimate attributeName='x2' values='100%25;300%25' dur='3s' repeatCount='indefinite' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23gradient)'/%3E%3C/svg%3E");
   }
 
   .text-last-right {
