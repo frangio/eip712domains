@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount } from "svelte";
+  import { onMount } from "svelte";
 
   const interval = 500;
   const max = 3;
