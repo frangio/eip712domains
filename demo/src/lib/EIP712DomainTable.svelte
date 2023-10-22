@@ -4,7 +4,6 @@
   import CopyIcon from "$lib/octicons/Copy.svelte";
   import CheckIcon from "$lib/octicons/Check.svelte";
   import Star from "$lib/octicons/Star.svelte";
-  import XIcon from "$lib/octicons/X.svelte";
 
   export let domain: EIP712DomainWithMarker;
 
@@ -23,7 +22,7 @@
   const getFields = (d: EIP712DomainWithMarker) => domainFieldNames.filter(f => f in d);
 
   const stringifyDomain = (d: EIP712DomainWithMarker) =>
-    JSON.stringify(d, (k, v) => typeof v === "bigint" ? "0x" + v.toString(16) : v, 2);
+    JSON.stringify(d, (_, v) => typeof v === "bigint" ? "0x" + v.toString(16) : v, 2);
 
   let copied: unknown;
   const handleCopy = () => {

@@ -1,10 +1,7 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { fade } from "svelte/transition";
-  import { browser } from "$app/environment";
-  import { assets } from "$app/paths";
   import { page } from "$app/stores";
-  import { erc5267, createERC5267Client, type EIP712Domain, type EIP712DomainWithMarker, type ERC5267Client } from "eip712domains/viem";
+  import { erc5267, createERC5267Client, type EIP712DomainWithMarker, type ERC5267Client } from "eip712domains/viem";
   import { type PublicClient, isAddress } from "viem";
   import type { Chain } from "viem/chains";
   import { promiseStore, type PromiseStore } from "$lib/promise-store.ts";
