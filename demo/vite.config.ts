@@ -8,6 +8,7 @@ export default defineConfig({
     conditions: ["typescript"],
   },
   server: {
+    host: true,
     watch: {
       ignored: ["!**/eip712domains/**"],
     },
