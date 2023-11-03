@@ -78,47 +78,64 @@
   }
 </script>
 
-<div class="flex flex-col gap-2">
-  <input type="text" class="ring-red-100" class:ring={address && !isAddress(address)} bind:value={address} on:focus={e => e.currentTarget.select()}>
+<svelte:head>
+<title>EIP-712 Domain Helper</title>
+</svelte:head>
 
-  <div class="flex gap-1 items-center justify-between text-sm">
-    {#if chain?.blockExplorers?.default}
-      <a class="px-2" href="{chain.blockExplorers.default.url}/address/{address}" target="_blank" rel="noreferrer">
-        <GlobeIcon width="1em" height="1em" />
-      </a>
-    {/if}
-    <NetworkSelect {initialRpc} bind:network bind:chain bind:publicClient />
+<div class="max-w-lg space-y-8 p-2 pt-4 mx-auto">
+  <div class="space-y-2">
+    <h1 class="font-bold text-2xl">
+      <a href="/">EIP-712 Domain Helper</a>
+    </h1>
+
+    <div class="space-x-2 [&>a:hover]:underline">
+      <a href="/about" data-sveltekit-preload-data>About</a>
+      <a href="https://github.com/frangio/eip712domains">Source</a>
+    </div>
   </div>
-</div>
 
-<div class="flex flex-col min-h-[20rem] justify-between">
-  <div class="relative">
-    {#if $domain.loading}
-      <div class="absolute inset-0" transition:fade>
-        <div class="absolute inset-0 flex items-end justify-center bg-sliding">
-          <span class="p-2 text-sm">
-            <Loading />
-          </span>
+  <div class="flex flex-col gap-2">
+    <input type="text" class="ring-red-100" class:ring={address && !isAddress(address)} bind:value={address} on:focus={e => e.currentTarget.select()}>
+
+    <div class="flex gap-1 items-center justify-between text-sm">
+      {#if chain?.blockExplorers?.default}
+        <a class="px-2" href="{chain.blockExplorers.default.url}/address/{address}" target="_blank" rel="noreferrer">
+          <GlobeIcon width="1em" height="1em" />
+        </a>
+      {/if}
+      <NetworkSelect {initialRpc} bind:network bind:chain bind:publicClient />
+    </div>
+  </div>
+
+  <div class="flex flex-col min-h-[20rem] justify-between">
+    <div class="relative">
+      {#if $domain.loading}
+        <div class="absolute inset-0" transition:fade>
+          <div class="absolute inset-0 flex items-end justify-center bg-sliding">
+            <span class="p-2 text-sm">
+              <Loading />
+            </span>
+          </div>
         </div>
-      </div>
-    {/if}
-    {#if $domain.error}
-      <div class="px-2 py-1 flex items-center gap-2 rounded border bg-amber-50 border-amber-200">
-        <span class="inline-block fill-amber-400"><AlertIcon /></span>
-        {$domain.error.shortMessage || $domain.error.message}
-      </div>
-    {:else}
-      <EIP712DomainTable domain={$domain.last} />
-    {/if}
-  </div>
+      {/if}
+      {#if $domain.error}
+        <div class="px-2 py-1 flex items-center gap-2 rounded border bg-amber-50 border-amber-200">
+          <span class="inline-block fill-amber-400"><AlertIcon /></span>
+          {$domain.error.shortMessage || $domain.error.message}
+        </div>
+      {:else}
+        <EIP712DomainTable domain={$domain.last} />
+      {/if}
+    </div>
 
-  <p class="flex flex-wrap gap-x-2">
-  <span>Examples:</span>
-  {#each Object.values(examples) as e}
-    <label class="block hover:cursor-pointer">
-      <input class="hidden peer" type="radio" bind:group={address} value={e.address} on:change={() => network = "mainnet"}>
-      <span class="peer-checked:underline">{e.name}</span>
-    </label>
-  {/each}
-  </p>
+    <p class="flex flex-wrap gap-x-2">
+    <span>Examples:</span>
+    {#each Object.values(examples) as e}
+      <label class="block hover:cursor-pointer">
+        <input class="hidden peer" type="radio" bind:group={address} value={e.address} on:change={() => network = "mainnet"}>
+        <span class="peer-checked:underline">{e.name}</span>
+      </label>
+    {/each}
+    </p>
+  </div>
 </div>
