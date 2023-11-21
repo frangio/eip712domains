@@ -14,16 +14,16 @@ npm install eip712domains
 // (1) Create an EIP-712 Domain Client
 
 // (1a) Viem
-import { createEIP712DomainClient } from 'eip712domains/viem';
-const { getEIP712Domain } = createEIP712DomainClient(publicClient);
+import { createERC5267Client } from 'eip712domains/viem';
+const { getEIP712Domain } = createERC5267Client(publicClient);
 
 // (1b) Ethers
-import { createEIP712DomainClient } from 'eip712domains/ethers';
-const { getEIP712Domain } = createEIP712DomainClient(provider);
+import { createERC5267Client } from 'eip712domains/ethers';
+const { getEIP712Domain } = createERC5267Client(provider);
 
 // (1c) HTTP
-import { createEIP712DomainClient } from 'eip712domains/http';
-const { getEIP712Domain } = createEIP712DomainClient('https://infura.io/...');
+import { createERC5267Client } from 'eip712domains/http';
+const { getEIP712Domain } = createERC5267Client('https://infura.io/...');
 
 // (2) Get the domain for a contract address
 const domain = await getEIP712Domain(contractAddress);
