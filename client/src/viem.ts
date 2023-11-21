@@ -1,6 +1,6 @@
 export * from './common';
 
-import { getAddress, getContract, ContractFunctionExecutionError, keccak256, createPublicClient, type PublicClient } from 'viem';
+import { getAddress, getContract, ContractFunctionExecutionError, type PublicClient } from 'viem';
 import { type EIP712Domain, type ERC5267Marker, type ERC5267Client, erc5267 } from './common';
 import { buildDomain, hashDomain } from './utils';
 
