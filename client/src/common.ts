@@ -3,7 +3,7 @@ export type Hex = `0x${string}`;
 export interface EIP712Domain {
   name?: string;
   version?: string;
-  chainId?: number | bigint;
+  chainId?: number;
   verifyingContract?: Hex;
   salt?: Hex;
 }

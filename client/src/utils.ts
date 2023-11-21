@@ -17,13 +17,19 @@ export function buildDomain(
   fieldsHex: Hex,
   name: string,
   version: string,
-  chainId: bigint,
+  chainId: number | bigint,
   verifyingContract: Hex,
   salt: Hex,
   extensions: readonly unknown[]
 ): EIP712Domain {
   if (extensions.length > 0) {
     throw Error('extensions not implemented');
+  }
+
+  if (chainId <= Number.MAX_SAFE_INTEGER) {
+    chainId = Number(chainId);
+  } else {
+    throw Error('chain id too large');
   }
 
   const fields = hexToNumber(fieldsHex);
