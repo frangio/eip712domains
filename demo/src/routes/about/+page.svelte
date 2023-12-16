@@ -11,8 +11,4 @@
   <p>
   This website and the <a href="https://github.com/frangio/eip712domains"><code>eip712domains</code></a> JavaScript library can help to retrieve the EIP-712 domain of an unknown contract. The domains of ERC-5267 contracts will be reliably recovered, whereas the domains for other contracts are recovered in a best-effort manner, some of it from a list of known domains and others by guessing.
   </p>
-
-  <div>
-    <img src={"/picture1.webp"} class="block w-2/3 m-auto my-20" alt="">
-  </div>
 </div>
