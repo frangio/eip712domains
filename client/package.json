@@ -1,6 +1,6 @@
 {
   "name": "eip712domains",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Utilities for retrieval of EIP-712 domain via ERC-5267 with fallback logic.",
   "author": "Francisco Giordano <fg@frang.io>",
   "license": "MIT",
