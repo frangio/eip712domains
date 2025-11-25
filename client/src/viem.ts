@@ -4,7 +4,7 @@ import { getAddress, getContract, ContractFunctionExecutionError, type PublicCli
 import { type EIP712Domain, type ERC5267Marker, type ERC5267Client, erc5267 } from './common';
 import { buildDomain, hashDomain } from './utils';
 
-export function createERC5267Client(publicClient: PublicClient): ERC5267Client {
+export function createERC5267Client(client: PublicClient): ERC5267Client {
   return {
     async getEIP712Domain(address) {
       const verifyingContract = getAddress(address);
@@ -12,7 +12,7 @@ export function createERC5267Client(publicClient: PublicClient): ERC5267Client {
       const contract = getContract({
         address: verifyingContract,
         abi,
-        publicClient,
+        client,
       });
 
       const eip5267Descriptor = await contract.read.eip712Domain().catch(async e => {
@@ -34,7 +34,7 @@ export function createERC5267Client(publicClient: PublicClient): ERC5267Client {
           contract.read.DOMAIN_TYPEHASH().catch(() => undefined),
           contract.read.name().catch(() => undefined),
           contract.read.version().catch(() => undefined),
-          publicClient.getChainId(),
+          client.getChainId(),
         ]);
 
         const domainSeparator = domainSeparator1 ?? domainSeparator2;

@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
   const shownChains = [
-    { group: "Mainnets", chains: ["mainnet", "arbitrum", "optimism", "polygon", "zkSync", "gnosis", "bsc"] },
-    { group: "Testnets", chains: ["sepolia", "goerli", "arbitrumGoerli", "optimismGoerli", "polygonMumbai", "zkSyncTestnet", "gnosisChiado", "bscTestnet"] },
+    { group: "Mainnets", chains: ["mainnet", "arbitrum", "optimism", "polygon", "zksync", "gnosis", "bsc"] },
+    { group: "Testnets", chains: ["sepolia", "goerli", "arbitrumGoerli", "optimismGoerli", "polygonMumbai", "zksyncSepoliaTestnet", "gnosisChiado", "bscTestnet"] },
     { group: "Local", chains: ["localhost", "hardhat", "foundry"] },
   ] as const;
 
@@ -31,7 +31,7 @@
 
   $: if (network !== "custom") {
     selectedChain = network;
-    rpc = chains[network].rpcUrls.public.http[0];
+    rpc = chains[network].rpcUrls.default.http[0];
   }
 
   export let chain: Chain | undefined;

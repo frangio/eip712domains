@@ -21,10 +21,10 @@
     "prepare": "npm run clean && npm run build"
   },
   "devDependencies": {
-    "abitype": "^0.9.0",
+    "abitype": "^1.1.0",
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "viem": "^1.0.7"
+    "viem": "^2.0.0"
   }
 }

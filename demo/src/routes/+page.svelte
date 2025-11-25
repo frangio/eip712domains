@@ -13,8 +13,8 @@
 
   const initialRpc = $page.url.searchParams.get("rpc") ?? undefined;
 
-  let network: NetworkName;
-  let chain: Chain;
+  let network: NetworkName | undefined;
+  let chain: Chain | undefined;
 
   const examples = {
     demo: {
@@ -58,7 +58,7 @@
   const domain: PromiseStore<EIP712DomainWithMarker> = promiseStore({
     name: "EIP5267Demo",
     version: "1",
-    chainId: 1n,
+    chainId: 1,
     verifyingContract: "0x5cEE26B7b9C1057b5e7272a37e53884385437A96",
     [erc5267]: true,
   });
