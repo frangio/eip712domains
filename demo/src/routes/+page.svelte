@@ -79,7 +79,7 @@
 </script>
 
 <div class="flex flex-col gap-2">
-  <input type="text" class="ring-red-100" class:ring={address && !isAddress(address)} bind:value={address} on:focus={e => e.currentTarget.select()}>
+  <input type="text" class="focus:border-blue-400 focus:ring-blue-200 ring-red-100" class:focus:ring-red-100={address && !isAddress(address)} class:ring-3={address && !isAddress(address)} bind:value={address} on:focus={e => e.currentTarget.select()}>
 
   <div class="flex gap-1 items-center justify-between text-sm">
     {#if chain?.blockExplorers?.default}

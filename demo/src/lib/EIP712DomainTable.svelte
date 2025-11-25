@@ -31,14 +31,16 @@
   };
 </script>
 
-<div class="w-full border rounded">
+<div class="w-full border border-gray-200 rounded">
   <table class="w-full table-fixed border-collapse">
-    {#each getFields(domain) as field}
-      <tr class="divide-x border-b">
-        <td class="px-2 py-1 w-[10ex]">{displayFieldName(field)}</td>
-        <td class="px-2 py-1 overflow-hidden text-ellipsis">{domain[field]}</td>
-      </tr>
-    {/each}
+    <tbody>
+      {#each getFields(domain) as field}
+        <tr class="divide-x divide-gray-200 border-b border-gray-200">
+          <td class="px-2 py-1 w-[10ex]">{displayFieldName(field)}</td>
+          <td class="px-2 py-1 overflow-hidden text-ellipsis">{domain[field]}</td>
+        </tr>
+      {/each}
+    </tbody>
   </table>
 
   <div class="text-sm flex">
