@@ -40,7 +40,7 @@
   export let publicClient: PublicClient | undefined;
   $: if (browser && isHttpUrl(rpc)) publicClient = createPublicClient({
     chain,
-    transport: http(rpc),
+    transport: http(rpc, { batch: true }),
     batch: { multicall: true },
   });
 
