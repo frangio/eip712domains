@@ -21,24 +21,6 @@ importers:
         specifier: ^5.2.2
         version: 5.9.3
 
-  contract:
-    dependencies:
-      '@nomicfoundation/hardhat-toolbox-viem':
-        specifier: ^4.1.1
-        version: 4.1.1(888a3dde66dfcfbba83b7b995968a209)
-      '@openzeppelin/contracts':
-        specifier: ^5.0.0
-        version: 5.4.0
-      dotenv:
-        specifier: ^16.0.3
-        version: 16.6.1
-      hardhat:
-        specifier: ^2.27.0
-        version: 2.27.0(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.9.3))(typescript@5.9.3)
-      typescript:
-        specifier: ^5.2.2
-        version: 5.9.3
-
   demo:
     dependencies:
       '@vercel/analytics':
@@ -84,6 +66,24 @@ importers:
       vite:
         specifier: ^7.2.4
         version: 7.2.4(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)
+
+  demo-contract:
+    dependencies:
+      '@nomicfoundation/hardhat-toolbox-viem':
+        specifier: ^4.1.1
+        version: 4.1.1(888a3dde66dfcfbba83b7b995968a209)
+      '@openzeppelin/contracts':
+        specifier: ^5.0.0
+        version: 5.4.0
+      dotenv:
+        specifier: ^16.0.3
+        version: 16.6.1
+      hardhat:
+        specifier: ^2.27.0
+        version: 2.27.0(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.9.3))(typescript@5.9.3)
+      typescript:
+        specifier: ^5.2.2
+        version: 5.9.3
 
 packages:
 
