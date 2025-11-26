@@ -1,5 +1,7 @@
 # EIP-712 Domain Helper
 
+[![](https://img.shields.io/npm/v/eip712domains.svg)](https://www.npmjs.org/package/eip712domains)
+
 A helper for retrieval of the EIP-712 domain of a contract. Uses [ERC-5267] with fallback to known domains or guided guessing.
 
 [ERC-5267]: https://eips.ethereum.com/EIPS/eip-5267
