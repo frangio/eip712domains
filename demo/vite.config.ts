@@ -5,7 +5,6 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [tailwindcss(), sveltekit()],
   resolve: {
-    preserveSymlinks: true,
     conditions: ["typescript"],
   },
   server: {
