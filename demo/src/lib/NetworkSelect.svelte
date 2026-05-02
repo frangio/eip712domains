@@ -29,9 +29,13 @@
 
   export let network: NetworkName = initialRpc !== undefined ? "custom" : selectedChain;
 
+  const rpcOverrides: Partial<Record<ChainName, string>> = {
+    mainnet: "https://eth.llamarpc.com",
+  };
+
   $: if (network !== "custom") {
     selectedChain = network;
-    rpc = chains[network].rpcUrls.default.http[0];
+    rpc = rpcOverrides[network] ?? chains[network].rpcUrls.default.http[0];
   }
 
   export let chain: Chain | undefined;
