@@ -30,7 +30,7 @@
   export let network: NetworkName = initialRpc !== undefined ? "custom" : selectedChain;
 
   const rpcOverrides: Partial<Record<ChainName, string>> = {
-    mainnet: "https://eth.llamarpc.com",
+    mainnet: "https://ethereum-rpc.publicnode.com",
   };
 
   $: if (network !== "custom") {
